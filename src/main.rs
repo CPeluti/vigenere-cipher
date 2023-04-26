@@ -1,4 +1,4 @@
-fn encoder(text: &str, key: &str) -> String {
+fn cipher(text: &str, key: &str) -> String {
     let alphabet = "abcdefghijklmnopqrstuvwxyz";
     let mut ciphred_text = String::from("");
     for (i,letter) in text.chars().enumerate() {
@@ -27,7 +27,7 @@ fn decipher(text: &str, key: &str) -> String {
 }
 
 fn main() {
-    let ciphred_text = encoder("testandoessetrabalhoincrivel", "teste");
+    let ciphred_text = cipher("testandoessetrabalhoincrivel", "teste");
     let deciphred_text = decipher(&ciphred_text, "teste");
     println!("{}", deciphred_text);
 }
