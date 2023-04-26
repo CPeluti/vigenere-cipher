@@ -11,7 +11,23 @@ fn encoder(text: &str, key: &str) -> String {
     }
     return ciphred_text;
 }
+
+fn decipher(text: &str, key: &str) -> String {
+    let alphabet = "abcdefghijklmnopqrstuvwxyz";
+    let mut deciphred_text = String::from("");
+    for (i, letter) in text.chars().enumerate() {
+        let let_value = letter as i32-97;
+        let key_let = key.as_bytes()[i%key.len()] as i32-97;
+        let new_index = (let_value-key_let + (alphabet.len()) as i32) % (alphabet.len()) as i32;
+        
+        let deciphred_letter = alphabet.chars().nth(new_index.try_into().unwrap()).unwrap();
+        deciphred_text.push(deciphred_letter);
+    }
+    return deciphred_text;
+}
+
 fn main() {
-    let ciphred_text = encoder("attackatdawn", "teste");
-    println!("{}", ciphred_text);
+    let ciphred_text = encoder("testandoessetrabalhoincrivel", "teste");
+    let deciphred_text = decipher(&ciphred_text, "teste");
+    println!("{}", deciphred_text);
 }
