@@ -96,7 +96,18 @@ fn challenge(letter_freq: &str, text: &str){
         }
     }
     // dict_freq.iter().max_by(|(a, b)| a.1)
-    
+    let mut key_len = (0, 0);
+    for (key, value) in dict_freq {
+        if value >= key_len.1 {
+            if value == key_len.1 {
+                if key_len.0 > key {
+                    key_len = (key, value);
+                }
+            } else {
+                key_len = (key, value);
+            }
+        }
+    }
 }
 
 fn main() {
