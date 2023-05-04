@@ -42,6 +42,16 @@ fn shift_character(char_to_shift: char, char_key: char) -> char{
     shiftted_char
 }
 
+fn shift_string(string_to_shift: &str, string_key: &str) -> String{
+    let pair: Vec<(char,char)> = string_to_shift.chars()
+    .zip(string_key.chars())
+    .collect();
+    let res = pair.iter()
+    .map(|(c1,c2)|shift_character(*c1,*c2))
+    .collect::<String>();
+    res
+}
+
 fn make_groups(text: &str, module: u32)->Vec<String>{
     let groups = text.chars()
     .collect::<Vec<char>>()
@@ -56,23 +66,25 @@ fn get_best_fitness(text: Vec<String>, group_size: usize, frequency_chart: HashM
     for i in 0..=group_size{
         let mut bigrams_to_analise = vec![String::new(); group_size];
         // Add the bigram to the vector to futher analise
-        for (i, group) in text.iter().enumerate() {
-            let mut chars_iter = group.chars();
-            bigrams_to_analise[i].push(chars_iter.nth(0).unwrap());
-            bigrams_to_analise[i].push(chars_iter.nth(0).unwrap());
+        for (j, group) in text.iter().enumerate() {
+            bigrams_to_analise[j].push(group.chars().nth(i%group_size).unwrap());
+            bigrams_to_analise[j].push(group.chars().nth((i+1)%group_size).unwrap());
         }
         //check each possible bigram (656 combinations)
         let best_fitness = vec![0; group_size];
-        for i in 0..26u8{
-            for j in 0..26u8{
+        for j in 0..26u8{
+            for k in 0..26u8{
                 let sum = 0;
                 // create bigram from iterators
                 let mut bigram_key = String::new();
-                bigram_key.push(i as char);
                 bigram_key.push(j as char);
+                bigram_key.push(k as char);
                 
+                let bigrams_shifted = bigrams_to_analise.iter()
+                .map(|bigram| shift_string(bigram.as_str(), bigram_key.as_str()))
+                .collect::<Vec<String>>();
                 
-                
+                println!("{:?}",bigrams_shifted)
             }
         }
     } 
@@ -81,11 +93,10 @@ fn get_best_fitness(text: Vec<String>, group_size: usize, frequency_chart: HashM
 fn solve(text: &str, key_size: u32, frequency_chart: HashMap<String, u32>){
     let groups = make_groups(text, 5);
     let key = get_best_fitness(groups, 5, frequency_chart);
-    println!("{:?}", groups);
 }
 
 fn challenge(frequency_chart: HashMap<String, u32>, text: &str){
-    solve(text, 5)
+    solve(text, 5, frequency_chart)
 }
 
 fn main() {
