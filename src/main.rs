@@ -34,128 +34,75 @@ fn _decipher(text: &str, key: &str) -> String {
     return deciphred_text;
 }
 
-fn ioc(text: &str) -> f64{
-    let mut letter_freq_in_text = vec![0; 26];
-    for i in text.chars() {
-        letter_freq_in_text[(i as usize)-97] += 1;
-    }
-    let n = text.len();
-    let mut sum = 0;
-    for freq in letter_freq_in_text.iter() {
-        sum += freq*(freq-1);
-    }
-    let denominator = n*(n-1);
-    return 26.0*sum as f64/denominator as f64;
-
+fn shift_character(char_to_shift: char, char_key: char) -> char{
+    let key_value = char_key as i32 - 97;
+    let char_value = char_to_shift as i32 - 97;
+    let new_index = (char_value-key_value + (alphabet.len()) as i32) % (alphabet.len()) as i32;
+    let shiftted_char = alphabet.chars().nth(new_index.try_into().unwrap()).unwrap();
+    shiftted_char
 }
 
-fn calculate_sd(freq: &Vec<(Vec<String>,usize,f64)>) -> f64{
-    let mut average = 0.0;
-    for (_,_, value) in freq {
-        average += value;
-    }
-    average = average/(freq.len()) as f64;
-    let mut sum = 0.0;
-    for (_,_, value) in freq {
-        sum += f64::powf((value-average) as f64,2.0);
-    }
-    return f64::sqrt(sum/(freq.len() as f64))
-}
-
-fn make_groups(text: &str, min_mod: usize, max_mod: usize) -> Vec<(Vec<String>,usize,f64)>{
-    // loop for each module
-    let mut ioc_groups = vec![];
-    for module in min_mod..=max_mod{
-        let mut groups = vec![];
-        // Initialize N strings for each group
-        for _ in 0..module {
-            groups.push(String::new());
-        }
-        for (index, char) in text.chars().enumerate(){
-            groups[index%module].push(char);
-        }
-        let iocs = groups.iter().map(|s| ioc(s)).collect::<Vec<f64>>();
-
-        let mut groups_ioc_med = iocs.iter().sum();
-
-        groups_ioc_med = groups_ioc_med/iocs.len() as f64;
-        ioc_groups.push((groups,module, groups_ioc_med));
-    }
-    return ioc_groups;
-}
-
-fn chi_square(text: &String, letter_freq: HashMap<&str, f64>) -> f64{
+fn make_groups(text: &str, module: u32)->Vec<String>{
+    let groups = text.chars()
+    .collect::<Vec<char>>()
+    .chunks(module as usize)
+    .map(|c| c.iter().collect::<String>())
+    .collect::<Vec<String>>();
     
-    let mut actual_frequency = vec![0;26];
-    let chi_square_result = 0;
-    for l in text.chars() {
-        actual_frequency[l as usize - 97] += 1;
-    } 
-    let mut sum = 0.0;
-    // For each letter in actual_frequency
-    for (i,l) in actual_frequency.iter().enumerate() {
-        let letter = char::from_u32((i+97) as u32).unwrap().to_string();
-        //calculate expected value of that letter
-        let expected = letter_freq[letter.as_str()] * text.len() as f64;
-        // Calculate error
-        let error = *l as f64 - expected;
-        // Error^2
-        let square = f64::powf(error, 2.0);
-        sum += square/expected;
-    }
-    return sum;
+    groups
 }
 
-fn solve(cosets: &Vec<String>, size:&usize, letter_freq: HashMap<&str,f64>) -> String {
-    let mut possible_password = String::new();
-    for coset in cosets {
-        let mut chi_square_scores = vec![];
-        // apply shifts in the coset for each letter in the alphabet
-        for i in 0..26{
-            let mut shifted_string = String::new();
-            for letter in coset.chars() {
-                let new_letter = (((letter as i32 - 97) - i) + alphabet.len() as i32) % alphabet.len() as i32; 
-                shifted_string.push(alphabet.chars().nth(new_letter.try_into().unwrap()).unwrap());
-            }
-            let score = chi_square(&shifted_string, letter_freq.clone());
-            chi_square_scores.push(score);
+fn get_best_fitness(text: Vec<String>, group_size: usize, frequency_chart: HashMap<String, u32>){
+    for i in 0..=group_size{
+        let mut bigrams_to_analise = vec![String::new(); group_size];
+        // Add the bigram to the vector to futher analise
+        for (i, group) in text.iter().enumerate() {
+            let mut chars_iter = group.chars();
+            bigrams_to_analise[i].push(chars_iter.nth(0).unwrap());
+            bigrams_to_analise[i].push(chars_iter.nth(0).unwrap());
         }
-        let min = chi_square_scores.iter().enumerate().min_by(|(_, val_a),(_, val_b)| val_a.partial_cmp(val_b).unwrap()).unwrap();
-        possible_password.push(char::from_u32(min.0 as u32 +97).unwrap());
-    }
-    return possible_password;
+        //check each possible bigram (656 combinations)
+        let best_fitness = vec![0; group_size];
+        for i in 0..26u8{
+            for j in 0..26u8{
+                let sum = 0;
+                // create bigram from iterators
+                let mut bigram_key = String::new();
+                bigram_key.push(i as char);
+                bigram_key.push(j as char);
+                
+                
+                
+            }
+        }
+    } 
+    return
+}
+fn solve(text: &str, key_size: u32, frequency_chart: HashMap<String, u32>){
+    let groups = make_groups(text, 5);
+    let key = get_best_fitness(groups, 5, frequency_chart);
+    println!("{:?}", groups);
 }
 
-fn challenge(_letter_freq: HashMap<&str,f64>, text: &str){
-    let rgx = Regex::new(r"[^a-z]").unwrap();
-    let text_formated = rgx.replace_all(text, "");
-
-    // Make groups of mod X
-    let  groups = make_groups(&text_formated,2,20);
-
-    let dp = calculate_sd(&groups);
-
-    let avg = groups.iter().fold(0.0, |acc, (_,_,i)| acc+i)/groups.len() as f64;
-    let possible_keys: Vec<_> = groups.iter().filter(|(_, _,ic)| ic>=&(dp+avg)).map(|(key,size,_)| (key,size)).collect();
-    for (cosets,possible_size) in possible_keys {
-        let password = solve(cosets, possible_size,_letter_freq);
-        println!("{:?}", password);
-        break;
-    } 
+fn challenge(frequency_chart: HashMap<String, u32>, text: &str){
+    solve(text, 5)
 }
 
 fn main() {
     let mut args = env::args();
-    let path = args.nth(1).unwrap();
+    // let mut path = args.nth(1).unwrap();
+    let path = "/home/caio/unb/sc/vigenere-cipher/src/english_bigrams.txt".to_string();
     let mut _letter_freq = fs::read_to_string(path).unwrap();
-    let letter_freq:HashMap<&str, f64> = _letter_freq
+    let letter_freq:HashMap<String, u32> = _letter_freq
     .split('\n')
     .map(|line| {
         let mut tokens = line.split(' ');
-        let (letter, value) = (tokens.next().unwrap(), tokens.next().unwrap());
-        (letter, value.parse::<f64>().unwrap())
+        let (letters, value) = (tokens.next().unwrap().to_lowercase(), tokens.next().unwrap());
+        
+        (letters, value.parse::<u32>().unwrap())
     }).collect();
-    let path_challenge = args.nth(0).unwrap();
+    // let path_challenge = args.nth(0).unwrap();
+    let path_challenge = "/home/caio/unb/sc/vigenere-cipher/src/challenge.txt";
     let _challenge = fs::read_to_string(path_challenge).unwrap();
     
     let _result = challenge(letter_freq, _challenge.as_str());
