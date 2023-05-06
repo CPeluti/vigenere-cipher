@@ -5,6 +5,19 @@ use indicatif::ProgressBar;
 
 const ALPHABET:&str = "abcdefghijklmnopqrstuvwxyz";
 
+fn _cipher(text: &str, key: &str) -> String {
+    let mut ciphred_text = String::from("");
+    for (i,letter) in text.chars().enumerate() {
+        // println!("{}", letter as u32-97);
+        let letter_value = letter as u32-97;
+        let key_letter = key.as_bytes()[i%key.len()] as u32-97;
+        let new_index = (letter_value+key_letter)%(ALPHABET.len() as u32);
+        let ciphred_letter = ALPHABET.chars().nth(new_index.try_into().unwrap()).unwrap();
+        ciphred_text.push(ciphred_letter);
+    }
+    ciphred_text
+}
+
 fn shift_character(char_to_shift: u8, char_key: u8) -> u8{
     let key_value = char_key - 97;
     let char_value = char_to_shift - 97;
@@ -77,7 +90,7 @@ pub fn decipher(text: &str, key: &str) -> String {
 
 pub fn solve(text: &str, frequency_chart: HashMap<Vec<u8>, u32>) -> String{
 
-    let max_key_size = 50;
+    let max_key_size = 30;
     println!("Deciphering the text!");
     let pb = ProgressBar::new(max_key_size);
 
