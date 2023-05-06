@@ -5,15 +5,23 @@ use indicatif::ProgressBar;
 
 const ALPHABET:&str = "abcdefghijklmnopqrstuvwxyz";
 
-fn _cipher(text: &str, key: &str) -> String {
+fn shift_right_character(char_to_shift: u8, char_key: u8) -> u8{
+    (char_to_shift+char_key)%(ALPHABET.len() as u8)+97
+}
+pub fn cipher(text: &str, key: &str) -> String {
     let mut ciphred_text = String::from("");
-    for (i,letter) in text.chars().enumerate() {
-        // println!("{}", letter as u32-97);
-        let letter_value = letter as u32-97;
-        let key_letter = key.as_bytes()[i%key.len()] as u32-97;
-        let new_index = (letter_value+key_letter)%(ALPHABET.len() as u32);
-        let ciphred_letter = ALPHABET.chars().nth(new_index.try_into().unwrap()).unwrap();
-        ciphred_text.push(ciphred_letter);
+    let mut counter = 0;
+    for letter in text.chars() {
+        let new_char = match letter {
+            'a'..='z'=> {
+                let letter_value = letter as u8-97;
+                let key_letter = key.as_bytes()[counter%(key.len()-1)] as u8-97;
+                counter+=1;
+                shift_right_character(letter_value, key_letter) as char
+            },
+            _ => letter
+        };
+        ciphred_text.push(new_char);
     }
     ciphred_text
 }
@@ -70,32 +78,30 @@ fn get_best_fitness(text: &str, group_size: u32, frequency_chart: HashMap<Vec<u8
 
 pub fn decipher(text: &str, key: &str) -> String {
     let mut deciphred_text = String::from("");
-    let mut counter_non_chars = 0;
-    for (i, letter) in text.chars().enumerate() {
-        if ![' ', '\n', ';', '\'', '—','-',',','.'].contains(&letter){
-            let index = i-counter_non_chars;
-            let let_value = letter as i32-97;
-            let key_let = key.as_bytes()[index%key.len()] as i32-97;
-            let new_index = (let_value-key_let + (ALPHABET.len()) as i32) % (ALPHABET.len()) as i32;
-            
-            let deciphred_letter = ALPHABET.chars().nth(new_index.try_into().unwrap()).unwrap();
-            deciphred_text.push(deciphred_letter);
-        } else {
-            deciphred_text.push(letter);
-            counter_non_chars+=1;
-        }
+    let mut counter = 0;
+    for letter in text.chars() {
+        let result = match letter {
+            'a'..='z' => {
+                let let_value = letter as u8-97;
+                let key_let = key.as_bytes()[counter%(key.len()-1)] as u8-97;
+                let new_index = (let_value-key_let + (ALPHABET.len()) as u8) % (ALPHABET.len()) as u8;
+                counter+=1;
+                (new_index+97) as char
+            },
+            _=>letter
+        };
+        deciphred_text.push(result);
     }
     deciphred_text
 }
 
-pub fn solve(text: &str, frequency_chart: HashMap<Vec<u8>, u32>) -> String{
+pub fn solve(text: &str, frequency_chart: HashMap<Vec<u8>, u32>, key_size: u32) -> String{
 
-    let max_key_size = 30;
     println!("Deciphering the text!");
-    let pb = ProgressBar::new(max_key_size);
+    let pb = ProgressBar::new(key_size as u64);
 
     //Bruteforce each key
-    let max = (2..=max_key_size as u32).into_par_iter().map(|key_size|{
+    let max = (2..=key_size as u32).into_par_iter().map(|key_size|{
 
         let key = get_best_fitness(text, key_size, frequency_chart.clone());
         // Maybe should change the output of decipher
@@ -107,8 +113,9 @@ pub fn solve(text: &str, frequency_chart: HashMap<Vec<u8>, u32>) -> String{
             fitness +=  frequency_chart.get(bigram).unwrap_or(&0);
         }
         pb.inc(1);
-        (fitness,possible_solution)
+        (fitness,possible_solution,key)
     }).max_by_key(|a| a.0).unwrap();
     pb.finish_with_message("done");
+    println!("{}",max.2);
     String::from_utf8(max.1).unwrap_or_default()
 }
