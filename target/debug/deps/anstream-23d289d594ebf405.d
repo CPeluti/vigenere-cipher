@@ -1,0 +1,14 @@
+/home/caio/vigenere-cipher/target/debug/deps/anstream-23d289d594ebf405.rmeta: /home/caio/.cargo/registry/src/github.com-1ecc6299db9ec823/anstream-0.3.2/src/lib.rs /home/caio/.cargo/registry/src/github.com-1ecc6299db9ec823/anstream-0.3.2/src/adapter/mod.rs /home/caio/.cargo/registry/src/github.com-1ecc6299db9ec823/anstream-0.3.2/src/adapter/strip.rs /home/caio/.cargo/registry/src/github.com-1ecc6299db9ec823/anstream-0.3.2/src/adapter/wincon.rs /home/caio/.cargo/registry/src/github.com-1ecc6299db9ec823/anstream-0.3.2/src/buffer.rs /home/caio/.cargo/registry/src/github.com-1ecc6299db9ec823/anstream-0.3.2/src/macros.rs /home/caio/.cargo/registry/src/github.com-1ecc6299db9ec823/anstream-0.3.2/src/auto.rs /home/caio/.cargo/registry/src/github.com-1ecc6299db9ec823/anstream-0.3.2/src/lockable.rs /home/caio/.cargo/registry/src/github.com-1ecc6299db9ec823/anstream-0.3.2/src/raw.rs /home/caio/.cargo/registry/src/github.com-1ecc6299db9ec823/anstream-0.3.2/src/strip.rs
+
+/home/caio/vigenere-cipher/target/debug/deps/anstream-23d289d594ebf405.d: /home/caio/.cargo/registry/src/github.com-1ecc6299db9ec823/anstream-0.3.2/src/lib.rs /home/caio/.cargo/registry/src/github.com-1ecc6299db9ec823/anstream-0.3.2/src/adapter/mod.rs /home/caio/.cargo/registry/src/github.com-1ecc6299db9ec823/anstream-0.3.2/src/adapter/strip.rs /home/caio/.cargo/registry/src/github.com-1ecc6299db9ec823/anstream-0.3.2/src/adapter/wincon.rs /home/caio/.cargo/registry/src/github.com-1ecc6299db9ec823/anstream-0.3.2/src/buffer.rs /home/caio/.cargo/registry/src/github.com-1ecc6299db9ec823/anstream-0.3.2/src/macros.rs /home/caio/.cargo/registry/src/github.com-1ecc6299db9ec823/anstream-0.3.2/src/auto.rs /home/caio/.cargo/registry/src/github.com-1ecc6299db9ec823/anstream-0.3.2/src/lockable.rs /home/caio/.cargo/registry/src/github.com-1ecc6299db9ec823/anstream-0.3.2/src/raw.rs /home/caio/.cargo/registry/src/github.com-1ecc6299db9ec823/anstream-0.3.2/src/strip.rs
+
+/home/caio/.cargo/registry/src/github.com-1ecc6299db9ec823/anstream-0.3.2/src/lib.rs:
+/home/caio/.cargo/registry/src/github.com-1ecc6299db9ec823/anstream-0.3.2/src/adapter/mod.rs:
+/home/caio/.cargo/registry/src/github.com-1ecc6299db9ec823/anstream-0.3.2/src/adapter/strip.rs:
+/home/caio/.cargo/registry/src/github.com-1ecc6299db9ec823/anstream-0.3.2/src/adapter/wincon.rs:
+/home/caio/.cargo/registry/src/github.com-1ecc6299db9ec823/anstream-0.3.2/src/buffer.rs:
+/home/caio/.cargo/registry/src/github.com-1ecc6299db9ec823/anstream-0.3.2/src/macros.rs:
+/home/caio/.cargo/registry/src/github.com-1ecc6299db9ec823/anstream-0.3.2/src/auto.rs:
+/home/caio/.cargo/registry/src/github.com-1ecc6299db9ec823/anstream-0.3.2/src/lockable.rs:
+/home/caio/.cargo/registry/src/github.com-1ecc6299db9ec823/anstream-0.3.2/src/raw.rs:
+/home/caio/.cargo/registry/src/github.com-1ecc6299db9ec823/anstream-0.3.2/src/strip.rs:
