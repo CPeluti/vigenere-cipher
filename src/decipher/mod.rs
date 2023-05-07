@@ -5,15 +5,31 @@ use indicatif::ProgressBar;
 
 const ALPHABET:&str = "abcdefghijklmnopqrstuvwxyz";
 
-fn _cipher(text: &str, key: &str) -> String {
+pub fn cipher(text: &str, key: &str) -> String {
     let mut ciphred_text = String::from("");
-    for (i,letter) in text.chars().enumerate() {
+    let text = text.as_bytes();
+    let mut counter = 0;
+    for letter in text {
         // println!("{}", letter as u32-97);
-        let letter_value = letter as u32-97;
-        let key_letter = key.as_bytes()[i%key.len()] as u32-97;
-        let new_index = (letter_value+key_letter)%(ALPHABET.len() as u32);
-        let ciphred_letter = ALPHABET.chars().nth(new_index.try_into().unwrap()).unwrap();
-        ciphred_text.push(ciphred_letter);
+        match letter {
+            b'a'..=b'z' => {
+                let letter_value = letter-97;
+                // testetesteteste
+                let key_letter = key.as_bytes()[counter%(key.len())]-97;
+                counter+=1;
+                let ciphred_letter = ((letter_value+key_letter)%(ALPHABET.len() as u8)+97) as char;
+                ciphred_text.push(ciphred_letter);
+            }
+            b'A'..=b'Z' => {
+                let letter_value = letter+32-97;
+                // testetesteteste
+                let key_letter = key.as_bytes()[counter%(key.len())]-97;
+                counter+=1;
+                let ciphred_letter = ((letter_value+key_letter)%(ALPHABET.len() as u8)+97-32) as char;
+                ciphred_text.push(ciphred_letter);
+            }
+            _=>{ciphred_text.push(*letter as char)}
+        }
     }
     ciphred_text
 }
@@ -75,7 +91,7 @@ pub fn decipher(text: &str, key: &str) -> String {
         if ![' ', '\n', ';', '\'', '—','-',',','.'].contains(&letter){
             let index = i-counter_non_chars;
             let let_value = letter as i32-97;
-            let key_let = key.as_bytes()[index%key.len()] as i32-97;
+            let key_let = key.as_bytes()[index%(key.len())] as i32-97;
             let new_index = (let_value-key_let + (ALPHABET.len()) as i32) % (ALPHABET.len()) as i32;
             
             let deciphred_letter = ALPHABET.chars().nth(new_index.try_into().unwrap()).unwrap();
@@ -88,12 +104,12 @@ pub fn decipher(text: &str, key: &str) -> String {
     deciphred_text
 }
 
-pub fn solve(text: &str, frequency_chart: HashMap<Vec<u8>, u32>) -> String{
+pub fn solve(text: &str, frequency_chart: HashMap<Vec<u8>, u32>, key_size:u64) -> String{
 
-    let max_key_size = 30;
+    let max_key_size = key_size;
     println!("Deciphering the text!");
     let pb = ProgressBar::new(max_key_size);
-
+    dbg!(text);
     //Bruteforce each key
     let max = (2..=max_key_size as u32).into_par_iter().map(|key_size|{
 
@@ -107,8 +123,9 @@ pub fn solve(text: &str, frequency_chart: HashMap<Vec<u8>, u32>) -> String{
             fitness +=  frequency_chart.get(bigram).unwrap_or(&0);
         }
         pb.inc(1);
-        (fitness,possible_solution)
+        (fitness,possible_solution, key)
     }).max_by_key(|a| a.0).unwrap();
     pb.finish_with_message("done");
+    println!("{}", max.2);
     String::from_utf8(max.1).unwrap_or_default()
 }

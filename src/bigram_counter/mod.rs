@@ -1,6 +1,6 @@
 use std::{collections::HashMap,fs, io::{self, Write}};
 use indicatif::ProgressBar;
-fn count_bigrams(path: String, path_output: String) -> Result<HashMap<Vec<u8>, u32>, io::Error>{
+pub fn count_bigrams(path: &String, path_output: &String) -> Result<HashMap<Vec<u8>, u32>, io::Error>{
 
     let file = fs::read_to_string(path)?;
     
@@ -14,6 +14,7 @@ fn count_bigrams(path: String, path_output: String) -> Result<HashMap<Vec<u8>, u
             'á'|'ã'|'â'|'à'|'ẫ'|'å' => Some('a'),
             'ç'=> Some('c'),
             'a'..='z' => Some(letter),
+            'A'..='Z' => Some((letter as u8 + 32) as char),
             _=> None
         }
     }).map(|l| l as u8).collect();
@@ -38,13 +39,12 @@ fn count_bigrams(path: String, path_output: String) -> Result<HashMap<Vec<u8>, u
     }
     pb.finish_with_message("done");
     nums.iter().for_each(|bigram| {
-        dict.entry(bigram.clone()).or_insert(0.0);
+        dict.entry(bigram.clone()).or_insert(1.0);
     });
 
     dict=dict.into_iter()
     .map(|(key,value)| {
         let calc = value as f64/processed_text.len() as f64;
-        let calc = if calc == 0.0 {1.0} else {calc};
         (key, calc.ln())
     })
     .collect();
