@@ -109,7 +109,6 @@ pub fn solve(text: &str, frequency_chart: HashMap<Vec<u8>, u32>, key_size:u64) -
     let max_key_size = key_size;
     println!("Deciphering the text!");
     let pb = ProgressBar::new(max_key_size);
-    dbg!(text);
     //Bruteforce each key
     let max = (2..=max_key_size as u32).into_par_iter().map(|key_size|{
 

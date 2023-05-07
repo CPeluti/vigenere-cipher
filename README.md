@@ -1,4 +1,7 @@
 # vigenere-cipher
+## Pre-requisitos
+- Linux
+- Rust
 ## How to build
 Para executar basta ter o [Rust](https://www.rust-lang.org/tools/install) mais recente instalado e rodar o seguinte comando na pasta do projeto:
 ```

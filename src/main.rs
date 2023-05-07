@@ -1,5 +1,4 @@
 use std::{collections::HashMap,fs, io::Write};
-use regex::Regex;
 
 use clap::{Parser,ValueEnum};
 
@@ -53,7 +52,7 @@ fn decipher_text(args: &Cli){
     let text = fs::read_to_string(args.arg0.as_ref().unwrap()).unwrap();
     std::io::stdin().read_line(&mut pw).unwrap();
     pw.pop();
-    let mut result = decipher::decipher(&text, &pw);
+    let result = decipher::decipher(&text, &pw);
     let file = fs::File::create(args.arg1.as_ref().unwrap_or(&"./out.txt".to_string()));
     match file {
         Ok(mut f) => f.write_all(result.as_bytes()).ok().unwrap(),
