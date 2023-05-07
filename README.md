@@ -19,7 +19,7 @@ Usado para descifrar uma cifra com chave conhecida
 cargo run --release -- decipher <path_para_cifra> <path_para_arquivo_saida>
 ```
 ### Cipher
-
+Usado para cifrar um texto com uma chave especifica
 ```
 cargo run --release -- cipher <path_para_texto> <path_para_arquivo_saida>
 ```
