@@ -13,4 +13,9 @@ cargo run --release -- solver <path_para_arquivo_log> <path_para_arquivo_da_cifr
 A senha terá o output no terminal
 ### Decipher
 ```
+cargo run --release -- decipher <path_para_cifra> <path_para_arquivo_saida>
+```
+### Cipher
+```
+cargo run --release -- cipher <path_para_texto> <path_para_arquivo_saida>
 ```
