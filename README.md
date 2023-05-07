@@ -9,7 +9,7 @@ cargo run --release
 ### Solver
 Usado para quebrar uma cifra com chave desconhecida
 ```
-cargo run --release -- solver <path_para_arquivo_log> <path_para_arquivo_da_cifra> <path_da_saida>
+cargo run --release -- solver <path_para_arquivo_log> <path_para_arquivo_da_cifra> <path_da_saida> -k <tamanho_maximo_key>
 ```
 > A senha terá o output no terminal
 > arquivo log é o arquivo que contem a probabilidades em log normalizadas
